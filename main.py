@@ -12,13 +12,12 @@ if st.button("Generar Partitura"):
     score = abjad.Score([staff])
 
     # Escribir el archivo .ly
-    abjad.persist(score).as_ly("output.ly")
+    abjad.persist.as_ly(score, "output.ly")
 
-    # Usar LilyPond para generar un archivo PNG
-    subprocess.run(["lilypond", "-dbackend=eps", "-dno-gs-load-fonts",
-                    "-dinclude-eps-fonts", "-dpixmap-format=pngalpha",
-                    "-dresolution=150", "-o", "output", "output.ly"])
+    # Usar LilyPond para generar un archivo SVG
+    subprocess.run(["lilypond", "-dbackend=svg", "-o", "output", "output.ly"])
 
-    # Mostrar la imagen generada en Streamlit
-    image = Image.open("output.png")
-    st.image(image, caption="Partitura Generada", use_column_width=True)
+    # Leer y mostrar la imagen SVG generada en Streamlit
+    with open("output.svg", "r") as svg_file:
+        svg_content = svg_file.read()
+        st.image(svg_content, format="svg")
