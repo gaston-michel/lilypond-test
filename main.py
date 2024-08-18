@@ -2,6 +2,7 @@ import streamlit as st
 import abjad
 import subprocess
 from PIL import Image
+from streamlit.components.v1 import html
 
 st.title("Generador de Partituras con Abjad y LilyPond")
 
@@ -15,9 +16,6 @@ if st.button("Generar Partitura"):
     abjad.persist.as_ly(score, "output.ly")
 
     # Usar LilyPond para generar un archivo SVG
-    subprocess.run(["lilypond", "-dbackend=svg", "-o", "output", "output.ly"])
+    subprocess.run(["lilypond", "-fpng", "output.ly"])
 
-    # Leer y mostrar la imagen SVG generada en Streamlit
-    with open("output.svg", "r") as svg_file:
-        svg_content = svg_file.read()
-        st.image(svg_content, format="svg")
+    st.image("output.png")
